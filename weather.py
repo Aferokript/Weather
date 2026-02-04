@@ -1,9 +1,11 @@
 import requests
 
-def build_url():
-    url_Sherementevo = 'https://wttr.in/SVO'
-    url_Cherepovec = 'https://wttr.in/Череповец'
-    url_London = 'https://wttr.in/Лондон'
+def get_weather_info():
+    dict_of_place = {
+        'Шерементево': 'https://wttr.in/SVO',
+        'Череповец': 'https://wttr.in/Череповец',
+        'Лондон': 'https://wttr.in/Лондон'
+    }
 
     params = {
         'lang': 'ru',
@@ -13,30 +15,24 @@ def build_url():
         '0': ''
     }
 
-    list_of_place = [
-        {'Шерементево': url_Sherementevo},
-        {'Череповец': url_Cherepovec},
-        {'Лондон': url_London}
-    ]
+    weather_data = []
 
-    for place in list_of_place:
-        if 'Шерементево' in place:
-            response1 = requests.get(place['Шерементево'], params=params)
-            response1.raise_for_status()
-        elif 'Череповец' in place:
-            response2 = requests.get(place['Череповец'], params=params)
-            response2.raise_for_status()
-        elif 'Лондон' in place:
-            response3 = requests.get(place['Лондон'], params=params)
-            response3.raise_for_status()
+    for name,url in dict_of_place.items():
+        response = requests.get(url, params=params)
+        response.raise_for_status()
+        weather_data.append(response.text)
+    return weather_data
 
-    print(f'Погода в Аэропорту Шерементево:{response1.text}')
-    print(f'Погода в Череповце:{response2.text}')
-    print(f'Погода в Лондоне:{response3.text}')
+
+def print_weather_data():
+    weather_data = get_weather_info()
+    print(f'Погода в аэропорту Шерементево: {weather_data[0]}')
+    print(f'Погода в Череповце: {weather_data[1]}')
+    print(f'Погода в Лондоне: {weather_data[2]}')
 
 
 def main():
-    build_url()
+    print_weather_data()
 
 
 if __name__ == '__main__':
